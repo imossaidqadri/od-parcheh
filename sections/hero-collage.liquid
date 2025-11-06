@@ -1,72 +1,273 @@
-<div class="px-[1.5rem] sm:px-[5rem]" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
-  <a
-    href="{{ section.settings.custom_link }}"
-    class="block max-w-[40rem] mx-auto no-underline"
-    {% if section.settings.custom_link == blank %}
-      aria-disabled="true"
-    {% endif %}
-  >
-    {% if section.settings.heading != blank %}
-      <h2 class="{% if section.settings.heading_size == 'h0' %}text-5xl md:text-7xl{% elsif section.settings.heading_size == 'h1' %}text-4xl md:text-6xl{% elsif section.settings.heading_size == 'hxl' %}text-6xl md:text-8xl{% else %}text-3xl md:text-5xl{% endif %} mb-8 text-center font-bold">
-        {{ section.settings.heading }}
-      </h2>
-    {% endif %}
+<style>
+  .hero-collage-wrapper {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-      {% for block in section.blocks %}
-        {% if forloop.first and section.settings.desktop_layout == 'left' %}
-          <div
-            class="md:col-span-2 md:row-span-2 overflow-hidden"
-            {{ block.shopify_attributes }}
-          >
-            {% if block.settings.image != blank %}
-              <img
-                src="{{ block.settings.image | image_url: width: 1200 }}"
-                srcset="
-                  {{ block.settings.image | image_url: width: 375 }} 375w,
-                  {{ block.settings.image | image_url: width: 750 }} 750w,
-                  {{ block.settings.image | image_url: width: 1200 }} 1200w,
-                  {{ block.settings.image | image_url: width: 1600 }} 1600w
-                "
-                sizes="(min-width: 768px) 66vw, 100vw"
-                alt="{{ block.settings.image.alt | escape }}"
-                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-out max-h-[500px]"
-                loading="eager"
-              >
+  @media (min-width: 640px) {
+    .hero-collage-wrapper {
+      padding: 2rem 5rem;
+    }
+  }
+
+  .hero-collage-card {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-collage-link {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    text-decoration: none;
+    flex: 1;
+    width: 100%;
+  }
+
+  .hero-collage-link.single-image {
+    max-width: 100%;
+  }
+
+  .hero-collage-link.multi-image {
+    max-width: 40rem;
+  }
+
+  .hero-collage-heading {
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .hero-collage-heading.h0 {
+    font-size: 3rem;
+  }
+
+  .hero-collage-heading.h1 {
+    font-size: 2.25rem;
+  }
+
+  .hero-collage-heading.h2 {
+    font-size: 1.875rem;
+  }
+
+  .hero-collage-heading.hxl {
+    font-size: 3.75rem;
+  }
+
+  @media (min-width: 768px) {
+    .hero-collage-heading.h0 {
+      font-size: 4.5rem;
+    }
+
+    .hero-collage-heading.h1 {
+      font-size: 3.75rem;
+    }
+
+    .hero-collage-heading.h2 {
+      font-size: 3rem;
+    }
+
+    .hero-collage-heading.hxl {
+      font-size: 6rem;
+    }
+  }
+
+  .hero-single-container {
+    width: 100%;
+    flex: 1;
+    display: flex;
+  }
+
+  .hero-single-image-wrapper {
+    width: 100%;
+    overflow: hidden;
+    flex: 1;
+    display: flex;
+  }
+
+  .hero-single-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    min-height: 350px;
+    object-fit: cover;
+    transition: transform 0.7s ease-out;
+  }
+
+  .hero-single-image-wrapper img:hover {
+    transform: scale(1.05);
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .hero-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .hero-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .hero-grid-item {
+    overflow: hidden;
+  }
+
+  .hero-grid-item.large {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+
+  @media (min-width: 768px) {
+    .hero-grid-item.large {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+  }
+
+  .hero-grid-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s ease-out;
+  }
+
+  .hero-grid-item img:hover {
+    transform: scale(1.05);
+  }
+
+  .hero-grid-item.small img {
+    max-height: 250px;
+  }
+
+  .hero-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+  }
+
+  .hero-placeholder.large {
+    min-height: 400px;
+  }
+
+  .hero-placeholder.single {
+    height: 100%;
+    min-height: 350px;
+    flex: 1;
+  }
+
+  .hero-placeholder span {
+    color: #9ca3af;
+    font-size: 0.875rem;
+  }
+</style>
+
+<div class="hero-collage-wrapper">
+  <div class="hero-collage-card" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+    <a
+      href="{{ section.settings.custom_link }}"
+      class="hero-collage-link {% if section.blocks.size == 1 %}single-image{% else %}multi-image{% endif %}"
+      {% if section.settings.custom_link == blank %}
+        aria-disabled="true"
+      {% endif %}
+    >
+      {% if section.settings.heading != blank %}
+        <h2 class="hero-collage-heading {{ section.settings.heading_size }}">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if section.blocks.size == 1 %}
+        <div class="hero-single-container">
+          {% for block in section.blocks %}
+            <div class="hero-single-image-wrapper" {{ block.shopify_attributes }}>
+              {% if block.settings.image != blank %}
+                <img
+                  src="{{ block.settings.image | image_url: width: 1200 }}"
+                  srcset="
+                    {{ block.settings.image | image_url: width: 375 }} 375w,
+                    {{ block.settings.image | image_url: width: 750 }} 750w,
+                    {{ block.settings.image | image_url: width: 1200 }} 1200w,
+                    {{ block.settings.image | image_url: width: 1600 }} 1600w
+                  "
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  alt="{{ block.settings.image.alt | escape }}"
+                  loading="eager"
+                >
+              {% else %}
+                <div class="hero-placeholder single">
+                  <span>Image placeholder</span>
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="hero-grid">
+          {% for block in section.blocks %}
+            {% if forloop.first and section.settings.desktop_layout == 'left' %}
+              <div class="hero-grid-item large" {{ block.shopify_attributes }}>
+                {% if block.settings.image != blank %}
+                  <img
+                    src="{{ block.settings.image | image_url: width: 1200 }}"
+                    srcset="
+                      {{ block.settings.image | image_url: width: 375 }} 375w,
+                      {{ block.settings.image | image_url: width: 750 }} 750w,
+                      {{ block.settings.image | image_url: width: 1200 }} 1200w,
+                      {{ block.settings.image | image_url: width: 1600 }} 1600w
+                    "
+                    sizes="(min-width: 768px) 66vw, 100vw"
+                    alt="{{ block.settings.image.alt | escape }}"
+                    loading="eager"
+                  >
+                {% else %}
+                  <div class="hero-placeholder large">
+                    <span>Image placeholder</span>
+                  </div>
+                {% endif %}
+              </div>
             {% else %}
-              <div class="w-full h-full bg-gray-100 flex items-center justify-center min-h-[400px]">
-                <span class="text-gray-400 text-sm">{{ 'Image placeholder' }}</span>
+              <div class="hero-grid-item small" {{ block.shopify_attributes }}>
+                {% if block.settings.image != blank %}
+                  <img
+                    src="{{ block.settings.image | image_url: width: 600 }}"
+                    srcset="
+                      {{ block.settings.image | image_url: width: 300 }} 300w,
+                      {{ block.settings.image | image_url: width: 600 }} 600w,
+                      {{ block.settings.image | image_url: width: 900 }} 900w
+                    "
+                    sizes="(min-width: 768px) 33vw, 50vw"
+                    alt="{{ block.settings.image.alt | escape }}"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="hero-placeholder">
+                    <span>Image placeholder</span>
+                  </div>
+                {% endif %}
               </div>
             {% endif %}
-          </div>
-        {% else %}
-          <div
-            class="overflow-hidden"
-            {{ block.shopify_attributes }}
-          >
-            {% if block.settings.image != blank %}
-              <img
-                src="{{ block.settings.image | image_url: width: 600 }}"
-                srcset="
-                  {{ block.settings.image | image_url: width: 300 }} 300w,
-                  {{ block.settings.image | image_url: width: 600 }} 600w,
-                  {{ block.settings.image | image_url: width: 900 }} 900w
-                "
-                sizes="(min-width: 768px) 33vw, 50vw"
-                alt="{{ block.settings.image.alt | escape }}"
-                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-out max-h-[250px]"
-                loading="lazy"
-              >
-            {% else %}
-              <div class="w-full h-full bg-gray-100 flex items-center justify-center min-h-[200px]">
-                <span class="text-gray-400 text-sm">{{ 'Image placeholder' }}</span>
-              </div>
-            {% endif %}
-          </div>
-        {% endif %}
-      {% endfor %}
-    </div>
-  </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </a>
+  </div>
 </div>
 
 {% schema %}

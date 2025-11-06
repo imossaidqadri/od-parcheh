@@ -1,5 +1,5 @@
 <div class="px-[1.5rem] sm:px-[5rem]" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
-  <div class="text-right ml-auto max-w-[80vw]">
+  <div class="text-center mx-auto max-w-[80vw]">
     {% if section.settings.message_text != blank %}
       <div class="text-sm text-black leading-relaxed">
         {{ section.settings.message_text }}
@@ -9,7 +9,8 @@
     {% if section.settings.button_label != blank and section.settings.button_link != blank %}
       <a
         href="{{ section.settings.button_link }}"
-        class="inline-block mt-6 bg-black text-white rounded-full px-8 py-1 text-sm hover:opacity-90 transition-opacity duration-300 no-underline"
+        class="inline-block mt-6 bg-black text-white px-10 py-3 text-sm font-medium hover:opacity-90 transition-opacity duration-300 no-underline"
+        style="border-radius: 25px;"
       >
         {{ section.settings.button_label }}
       </a>
