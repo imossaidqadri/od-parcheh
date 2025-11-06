@@ -1,7 +1,7 @@
-<div class="px-[15px] sm:px-[30px]" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+<div class="px-[1.5rem] sm:px-[5rem]" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
   <a
     href="{{ section.settings.custom_link }}"
-    class="block max-w-[50rem] mx-auto no-underline"
+    class="block max-w-[40rem] mx-auto no-underline"
     {% if section.settings.custom_link == blank %}
       aria-disabled="true"
     {% endif %}
@@ -30,7 +30,7 @@
                 "
                 sizes="(min-width: 768px) 66vw, 100vw"
                 alt="{{ block.settings.image.alt | escape }}"
-                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-out"
+                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-out max-h-[500px]"
                 loading="eager"
               >
             {% else %}
@@ -54,7 +54,7 @@
                 "
                 sizes="(min-width: 768px) 33vw, 50vw"
                 alt="{{ block.settings.image.alt | escape }}"
-                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-out"
+                class="w-full h-full object-cover hover:scale-105 transition-transform duration-700 ease-out max-h-[250px]"
                 loading="lazy"
               >
             {% else %}
